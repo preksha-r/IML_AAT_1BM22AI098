@@ -1,0 +1,40 @@
+def make_decision(m, k, d, stocks):
+    transactions = []
+    
+    # Iterate through each stock provided
+    for stock in stocks:
+        name = stock[0]
+        owned = int(stock[1])
+        prices = list(map(float, stock[2:]))
+        current_price = prices[-1]
+        sma_5 = sum(prices) / 5
+        
+        # Decision making logic
+        if current_price > sma_5:
+            # Sell all owned shares if price is higher than 5-day average
+            if owned > 0:
+                transactions.append(f"{name} SELL {owned}")
+        else:
+            # Buy as many shares as possible if price is lower than current available money
+            if m >= current_price:
+                num_to_buy = int(m // current_price)
+                transactions.append(f"{name} BUY {num_to_buy}")
+    
+    # Output the number of transactions
+    num_transactions = len(transactions)
+    print(num_transactions)
+    # Output each transaction details
+    for transaction in transactions:
+        print(transaction)
+
+# Example usage:
+input_data = [
+    "90 2 400",
+    "iStreet 10 4.54 5.53 6.56 5.54 7.60",
+    "HR 0 30.54 27.53 24.42 20.11 17.50"
+]
+
+m, k, d = map(int, input_data[0].split())
+stocks = [line.split() for line in input_data[1:]]
+
+make_decision(m, k, d, stocks)
